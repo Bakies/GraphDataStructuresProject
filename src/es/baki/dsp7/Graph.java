@@ -184,7 +184,7 @@ public class Graph {
 		Vertex v;
 		Path p;
 		ArrayList<Path> s = new ArrayList<>();
-		s.add(new Path(entrance));
+		s.add(new Path(exit));
 		while(s.size() != 0) {
 			p = s.remove(0);
 			v = p.curent;
@@ -193,13 +193,13 @@ public class Graph {
 			if (!v.discovered ){
 				v.discover();
 				nodeexpanded++;
-				if(exit.discovered){
+				if(entrance.discovered){
 					System.out.println("End Found in :" + Integer.toString(nodeexpanded) + " Steps");
 					while(p.before != null){
 						System.out.println(p.curent.display());
 						p = p.before;
 					}
-					System.out.println(entrance.display());
+					System.out.println(exit.display());
 					return;
 				}
 				for (Vertex w : v.connections) {
