@@ -32,23 +32,31 @@ public class Graph {
 	public void addEntrance(int x, int y) {
 		Vertex v = getVertex(x, y);
 		addVertex(x, y);
+		System.out.println("Added Enterance: " + Integer.toString(v.x) + "," + Integer.toString(v.y));
 		entrance = v;
 	}
 
 	public void addExit(int x, int y) {
 		Vertex v = getVertex(x, y);
 		addVertex(x, y);
+
+		System.out.println("Added exit: " + Integer.toString(v.x) + "," + Integer.toString(v.y));
 		exit = v;
 	}
 
 	public void addConnection(int x1, int y1, int x2, int y2) {
-		Vertex v1 = getVertex(x1, y1), v2 = getVertex(x2, y2);
+		Vertex v1 = getVertex(x1, y1);
+		Vertex v2 = getVertex(x2, y2);
 
 		addVertex(x1, y1);
 		addVertex(x2, y2);
+
+		System.out.println("Connected vertex " + Integer.toString(x1) + "," + Integer.toString(y1) + " and " + Integer.toString(x2) + ","+ Integer.toString(y2));
 		
 		v1.addConnection(v2);
 		v2.addConnection(v1);
+
+
 	}
 
 	public void readInFromFile(String filename) {
@@ -151,6 +159,7 @@ public class Graph {
 9                  S.push(w)
 	 */
 	public void depthFirstSearch() {
+		int nodeexpanded = 0;
 		for (Vertex v : vertices) {
 			v.undiscover();
 		}
@@ -158,14 +167,16 @@ public class Graph {
 		ArrayList<Vertex> s = new ArrayList<>();
 		s.add(entrance);
 		while(s.size() != 0) {
-			String out = "";
-			for (int x = 0; x < s.size(); x ++){
-				out += s.get(x);
-			}
-			System.out.println(out);
 			v = s.remove(0);
+
 			if (!v.discovered ){
 				v.discover();
+				nodeexpanded++;
+				if(exit.discovered){
+					System.out.println("End Found in :" + Integer.toString(nodeexpanded) + " Steps");
+
+					return;
+				}
 				for (Vertex w : v.connections) {
 					s.add(0, w);
 				}
@@ -232,6 +243,14 @@ public class Graph {
 		
 		System.out.println(g);
 		g.depthFirstSearch();
+
+
+		/*for (Vertex ver : g.vertices){
+			System.out.println("Vertex: " +Integer.toString(ver.x) + "," + Integer.toString(ver.y));
+			for(Vertex vert : ver.connections){
+				System.out.println("Conection: " + Integer.toString(vert.x) + "," + Integer.toString(vert.y));
+			}
+		}*/
 	}
 	
 
