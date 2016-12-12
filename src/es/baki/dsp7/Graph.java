@@ -144,7 +144,25 @@ public class Graph {
 				return;
 			this.connections.add(v);
 			
-		}		
+		}
+
+		private String display(){
+			return (Integer.toString(x) + ", " + Integer.toString(y));
+		}
+	}
+
+	private class Path {
+		Path before;
+		Vertex curent;
+
+		Path(Path before, Vertex curent){
+			this.before = before;
+			this.curent = curent;
+		}
+		Path(Vertex start){
+			this.before = null;
+			this.curent = start;
+		}
 	}
 	
 	/*
@@ -164,21 +182,28 @@ public class Graph {
 			v.undiscover();
 		}
 		Vertex v;
-		ArrayList<Vertex> s = new ArrayList<>();
-		s.add(entrance);
+		Path p;
+		ArrayList<Path> s = new ArrayList<>();
+		s.add(new Path(entrance));
 		while(s.size() != 0) {
-			v = s.remove(0);
+			p = s.remove(0);
+			v = p.curent;
+
 
 			if (!v.discovered ){
 				v.discover();
 				nodeexpanded++;
 				if(exit.discovered){
 					System.out.println("End Found in :" + Integer.toString(nodeexpanded) + " Steps");
-
+					while(p.before != null){
+						System.out.println(p.curent.display());
+						p = p.before;
+					}
+					System.out.println(entrance.display());
 					return;
 				}
 				for (Vertex w : v.connections) {
-					s.add(0, w);
+					s.add(0, new Path(p,w));
 				}
 			}
 		}
