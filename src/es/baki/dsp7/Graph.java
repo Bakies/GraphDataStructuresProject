@@ -154,14 +154,21 @@ public class Graph {
 	private class Path {
 		Path before;
 		Vertex curent;
+		int level;
 
 		Path(Path before, Vertex curent){
 			this.before = before;
 			this.curent = curent;
 		}
+		Path(Path before, Vertex curent, int level){
+			this.before = before;
+			this.curent = curent;
+			this.level = level;
+		}
 		Path(Vertex start){
 			this.before = null;
 			this.curent = start;
+			level = 0;
 		}
 	}
 	
@@ -204,6 +211,46 @@ public class Graph {
 				}
 				for (Vertex w : v.connections) {
 					s.add(0, new Path(p,w));
+				}
+			}
+		}
+	}
+
+	public void breathFirstSearch() {
+		int nodeexpanded = 0;
+
+		Vertex v;
+		Path p;
+		int lev;
+
+		for (int max = 1; max < 100; max++) {
+			for (Vertex t : vertices) {
+				t.undiscover();
+			}
+			ArrayList<Path> s = new ArrayList<>();
+			s.add(new Path(exit));
+			while (s.size() != 0) {
+				p = s.remove(0);
+				v = p.curent;
+				lev = p.level;
+
+				if (!v.discovered) {
+					v.discover();
+					nodeexpanded++;
+					if (entrance.discovered) {
+						System.out.println("End Found at level: " + Integer.toString(max));
+						while (p.before != null) {
+							System.out.println(p.curent.display());
+							p = p.before;
+						}
+						System.out.println(exit.display());
+						return;
+					}
+					if (lev < max) {
+						for (Vertex w : v.connections) {
+							s.add(0, new Path(p, w, (lev + 1)));
+						}
+					}
 				}
 			}
 		}
@@ -267,6 +314,9 @@ public class Graph {
 		g.readInFromFile("GraphFileExample");
 		
 		System.out.println(g);
+		System.out.println("Breadth:");
+		g.breathFirstSearch();
+		System.out.println("Depth:");
 		g.depthFirstSearch();
 
 
